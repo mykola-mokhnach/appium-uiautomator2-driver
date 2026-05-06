@@ -1,3 +1,9 @@
+## [7.2.1](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.0...v7.2.1) (2026-05-06)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump sinon from 21.1.2 to 22.0.0 ([#997](https://github.com/appium/appium-uiautomator2-driver/issues/997)) ([2ba9f36](https://github.com/appium/appium-uiautomator2-driver/commit/2ba9f36a05f6f56b8a951055fcfaa0320a67832b))
+
 ## [7.2.0](https://github.com/appium/appium-uiautomator2-driver/compare/v7.1.2...v7.2.0) (2026-05-03)
 
 ### Features
