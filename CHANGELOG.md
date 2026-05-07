@@ -1,3 +1,9 @@
+## [7.2.2](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.1...v7.2.2) (2026-05-07)
+
+### Miscellaneous Chores
+
+* add new line in readme to kick a new release with the latest deps ([66a5302](https://github.com/appium/appium-uiautomator2-driver/commit/66a53027cbbbd7b4ab1335f58c43ecc38e81a0c7))
+
 ## [7.2.1](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.0...v7.2.1) (2026-05-06)
 
 ### Miscellaneous Chores
