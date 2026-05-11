@@ -1,3 +1,9 @@
+## [7.2.3](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.2...v7.2.3) (2026-05-11)
+
+### Miscellaneous Chores
+
+* **deps:** bump appium-uiautomator2-server from 9.11.2 to 10.0.1 ([#999](https://github.com/appium/appium-uiautomator2-driver/issues/999)) ([396be93](https://github.com/appium/appium-uiautomator2-driver/commit/396be93562fd24518a4e43c402daf4aa81640cff))
+
 ## [7.2.2](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.1...v7.2.2) (2026-05-07)
 
 ### Miscellaneous Chores
