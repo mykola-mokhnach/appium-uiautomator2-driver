@@ -1,3 +1,9 @@
+## [7.3.0](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.3...v7.3.0) (2026-05-13)
+
+### Features
+
+* Enable strict TS mode ([#1000](https://github.com/appium/appium-uiautomator2-driver/issues/1000)) ([6f6cde0](https://github.com/appium/appium-uiautomator2-driver/commit/6f6cde08efb6b7f5669850a83c8115fd0cc363f2))
+
 ## [7.2.3](https://github.com/appium/appium-uiautomator2-driver/compare/v7.2.2...v7.2.3) (2026-05-11)
 
 ### Miscellaneous Chores
