@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type {
   DefaultCreateSessionResult,
   DriverData,
@@ -10,7 +9,7 @@ import type {
   StringRecord,
   SessionCapabilities,
 } from '@appium/types';
-import {DEFAULT_ADB_PORT} from 'appium-adb';
+import {DEFAULT_ADB_PORT, type ADB} from 'appium-adb';
 import {AndroidDriver, utils} from 'appium-android-driver';
 import {SETTINGS_HELPER_ID} from 'io.appium.settings';
 import {BaseDriver, DeviceSettings} from 'appium/driver';
@@ -241,8 +240,6 @@ const CHROME_NO_PROXY: RouteMatcher[] = [
   ['POST', new RegExp('^/session/[^/]+/se/log$')],
 ];
 
-const MEMOIZED_FUNCTIONS = ['getStatusBarHeight', 'getDevicePixelRatio'] as const;
-
 class AndroidUiautomator2Driver
   extends AndroidDriver
   implements ExternalDriver<Uiautomator2Constraints, string, StringRecord>
@@ -250,7 +247,7 @@ class AndroidUiautomator2Driver
   static newMethodMap = newMethodMap;
   static executeMethodMap = executeMethodMap;
 
-  uiautomator2: UiAutomator2Server;
+  uiautomator2!: UiAutomator2Server;
 
   systemPort: number | undefined;
 
@@ -267,7 +264,7 @@ class AndroidUiautomator2Driver
   mobileGetActionHistory = mobileGetActionHistory;
   mobileScheduleAction = mobileScheduleAction;
   mobileUnscheduleAction = mobileUnscheduleAction;
-  performActions = performActions;
+  performActions = performActions as AndroidDriver['performActions'];
   releaseActions = releaseActions;
 
   getAlertText = getAlertText;
@@ -281,23 +278,23 @@ class AndroidUiautomator2Driver
   mobileGetBatteryInfo = mobileGetBatteryInfo;
 
   active = active;
-  getAttribute = getAttribute;
-  elementEnabled = elementEnabled;
-  elementDisplayed = elementDisplayed;
-  elementSelected = elementSelected;
-  getName = getName;
-  getLocation = getLocation;
-  getSize = getSize;
+  getAttribute = getAttribute as AndroidDriver['getAttribute'];
+  elementEnabled = elementEnabled as AndroidDriver['elementEnabled'];
+  elementDisplayed = elementDisplayed as AndroidDriver['elementDisplayed'];
+  elementSelected = elementSelected as AndroidDriver['elementSelected'];
+  getName = getName as AndroidDriver['getName'];
+  getLocation = getLocation as AndroidDriver['getLocation'];
+  getSize = getSize as AndroidDriver['getSize'];
   getElementRect = getElementRect;
   getElementScreenshot = getElementScreenshot;
-  getText = getText;
-  setValueImmediate = setValueImmediate;
-  doSetElementValue = doSetElementValue;
-  click = click;
+  getText = getText as AndroidDriver['getText'];
+  setValueImmediate = setValueImmediate as AndroidDriver['setValueImmediate'];
+  doSetElementValue = doSetElementValue as AndroidDriver['doSetElementValue'];
+  click = click as AndroidDriver['click'];
   clear = clear;
   mobileReplaceElementValue = mobileReplaceElementValue;
 
-  doFindElementOrEls = doFindElementOrEls;
+  doFindElementOrEls = doFindElementOrEls as AndroidDriver['doFindElementOrEls'];
 
   mobileClickGesture = mobileClickGesture;
   mobileDoubleClickGesture = mobileDoubleClickGesture;
@@ -311,18 +308,18 @@ class AndroidUiautomator2Driver
   mobileScrollGesture = mobileScrollGesture;
   mobileSwipeGesture = mobileSwipeGesture;
 
-  pressKeyCode = pressKeyCode;
-  longPressKeyCode = longPressKeyCode;
+  pressKeyCode = pressKeyCode as AndroidDriver['pressKeyCode'];
+  longPressKeyCode = longPressKeyCode as AndroidDriver['longPressKeyCode'];
   mobilePressKey = mobilePressKey;
   mobileType = mobileType;
-  doSendKeys = doSendKeys;
+  doSendKeys = doSendKeys as AndroidDriver['doSendKeys'];
   keyevent = keyevent;
 
   getPageSource = getPageSource;
   getOrientation = getOrientation;
   setOrientation = setOrientation;
-  openNotifications = openNotifications;
-  suspendChromedriverProxy = suspendChromedriverProxy as any;
+  openNotifications = openNotifications as AndroidDriver['openNotifications'];
+  suspendChromedriverProxy = suspendChromedriverProxy as AndroidDriver['suspendChromedriverProxy'];
   mobileGetDeviceInfo = mobileGetDeviceInfo;
   mobileResetAccessibilityCache = mobileResetAccessibilityCache;
   mobileListWindows = mobileListWindows;
@@ -331,7 +328,7 @@ class AndroidUiautomator2Driver
   getClipboard = getClipboard;
   setClipboard = setClipboard;
 
-  setUrl = setUrl;
+  setUrl = setUrl as AndroidDriver['setUrl'];
   mobileDeepLink = mobileDeepLink;
   back = back;
 
@@ -342,10 +339,10 @@ class AndroidUiautomator2Driver
 
   getStatusBarHeight = getStatusBarHeight;
   getDevicePixelRatio = getDevicePixelRatio;
-  getDisplayDensity = getDisplayDensity;
+  getDisplayDensity = getDisplayDensity as AndroidDriver['getDisplayDensity'];
   getViewPortRect = getViewPortRect;
-  getWindowRect = getWindowRect;
-  getWindowSize = getWindowSize;
+  getWindowRect = getWindowRect as AndroidDriver['getWindowRect'];
+  getWindowSize = getWindowSize as AndroidDriver['getWindowSize'];
   mobileViewPortRect = mobileViewPortRect;
 
   constructor(opts: InitialOpts = {} as InitialOpts, shouldValidateCaps = true) {
@@ -378,9 +375,8 @@ class AndroidUiautomator2Driver
     this.caps = {} as Uiautomator2DriverCaps;
     this.opts = opts as Uiautomator2DriverOpts;
     // memoize functions here, so that they are done on a per-instance basis
-    for (const fn of MEMOIZED_FUNCTIONS) {
-      this[fn] = _.memoize(this[fn]) as any;
-    }
+    this.getStatusBarHeight = _.memoize(this.getStatusBarHeight);
+    this.getDevicePixelRatio = _.memoize(this.getDevicePixelRatio);
   }
 
   override get driverData() {
@@ -439,15 +435,15 @@ class AndroidUiautomator2Driver
       // ADB instance
       this.adb = await this.createADB();
 
-      if (this.isChromeSession) {
+      if (this.isChromeSession && this.opts.browserName) {
         this.log.info(`We're going to run a Chrome-based session`);
-        const {pkg, activity: defaultActivity} = utils.getChromePkg(this.opts.browserName!);
+        const {pkg, activity: defaultActivity} = utils.getChromePkg(this.opts.browserName);
         let activity: string = defaultActivity;
         try {
           activity = await this.adb.resolveLaunchableActivity(pkg);
         } catch (e) {
           this.log.warn(
-            `Using the default ${pkg} activity ${activity}. Original error: ${e.message}`,
+            `Using the default ${pkg} activity ${activity}. Original error: ${(e as Error).message}`,
           );
         }
         this.opts.appPackage = this.caps.appPackage = pkg;
@@ -516,11 +512,16 @@ class AndroidUiautomator2Driver
   override async getSession(): Promise<SingularSessionData<Uiautomator2Constraints>> {
     const sessionData = await BaseDriver.prototype.getSession.call(this);
     this.log.debug('Getting session details from server to mix in');
-    const uia2Data = (await this.uiautomator2!.jwproxy.command('/', 'GET', {})) as any;
+    const uia2Data = (await this.requireUiautomator2().jwproxy.command(
+      '/',
+      'GET',
+      {},
+    )) as StringRecord;
     return {...sessionData, ...uia2Data};
   }
 
   async allocateSystemPort() {
+    const adb = this.requireAdb();
     const forwardPort = async (localPort: number) => {
       this.log.debug(
         `Forwarding UiAutomator2 Server port ${DEVICE_PORT} to local port ${localPort}`,
@@ -533,7 +534,7 @@ class AndroidUiautomator2Driver
             `old automation sessions on the same device must always be closed before starting new ones.`,
         );
       }
-      await this.adb!.forwardPort(localPort, DEVICE_PORT);
+      await adb.forwardPort(localPort, DEVICE_PORT);
     };
 
     if (this.opts.systemPort) {
@@ -558,34 +559,35 @@ class AndroidUiautomator2Driver
   }
 
   async releaseSystemPort() {
-    if (!this.systemPort || !this.adb) {
+    const adb = this.adb;
+    const systemPort = this.systemPort;
+    if (!systemPort || !adb) {
       return;
     }
 
     if (this.opts.systemPort) {
       // We assume if the systemPort is provided manually then it must be unique,
       // so there is no need for the explicit synchronization
-      await this.adb.removePortForward(this.systemPort);
+      await adb.removePortForward(systemPort);
     } else {
-      await DEVICE_PORT_ALLOCATION_GUARD(
-        async () => await this.adb!.removePortForward(this.systemPort!),
-      );
+      await DEVICE_PORT_ALLOCATION_GUARD(async () => await adb.removePortForward(systemPort));
     }
   }
 
   async allocateMjpegServerPort() {
     if (this.opts.mjpegServerPort) {
+      const adb = this.requireAdb();
       this.log.debug(
         `MJPEG broadcasting requested, forwarding MJPEG server port ${MJPEG_SERVER_DEVICE_PORT} ` +
           `to local port ${this.opts.mjpegServerPort}`,
       );
-      await this.adb!.forwardPort(this.opts.mjpegServerPort, MJPEG_SERVER_DEVICE_PORT);
+      await adb.forwardPort(this.opts.mjpegServerPort, MJPEG_SERVER_DEVICE_PORT);
     }
   }
 
   async releaseMjpegServerPort() {
-    if (this.opts.mjpegServerPort) {
-      await this.adb!.removePortForward(this.opts.mjpegServerPort);
+    if (this.opts.mjpegServerPort && this.adb) {
+      await this.adb.removePortForward(this.opts.mjpegServerPort);
     }
   }
 
@@ -610,7 +612,7 @@ class AndroidUiautomator2Driver
                 'Please check https://github.com/appium/appium/issues/13802 for more details. ' +
                 'You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ' +
                 'ignore this error, which might later lead to unexpected crashes or behavior of ' +
-                `the automation server. Original error: ${err.message}`,
+                `the automation server. Original error: ${(err as Error).message}`,
             );
           }
         })(),
@@ -732,9 +734,19 @@ class AndroidUiautomator2Driver
   ): Promise<Uiautomator2SessionCaps> {
     const appInfo = await this.performSessionPreExecSetup();
     // set actual device name, udid, platform version, screen size, screen density, model and manufacturer details
+    const deviceName = this.adb?.curDeviceId;
+    const deviceUDID = this.opts.udid;
+    if (!deviceName) {
+      throw this.log.errorWithException(
+        'Could not determine device name (ADB curDeviceId is empty)',
+      );
+    }
+    if (!deviceUDID) {
+      throw this.log.errorWithException('Device UDID is not set in session options');
+    }
     const sessionInfo: Uiautomator2SessionInfo = {
-      deviceName: this.adb.curDeviceId!,
-      deviceUDID: this.opts.udid!,
+      deviceName,
+      deviceUDID,
     };
     const capsWithSessionInfo = {
       ...caps,
@@ -742,9 +754,9 @@ class AndroidUiautomator2Driver
     };
     // Adding AUT info in the capabilities if it does not exist in caps
     if (appInfo) {
-      for (const capName of ['appPackage', 'appActivity']) {
-        if (!capsWithSessionInfo[capName] && appInfo[capName]) {
-          capsWithSessionInfo[capName] = appInfo[capName];
+      for (const capName of ['appPackage', 'appActivity'] as const) {
+        if (!(capsWithSessionInfo as StringRecord)[capName] && appInfo[capName]) {
+          (capsWithSessionInfo as StringRecord)[capName] = appInfo[capName];
         }
       }
     }
@@ -755,7 +767,7 @@ class AndroidUiautomator2Driver
       try {
         return await this.getDeviceDetails();
       } catch (e) {
-        this.log.warn(`Cannot fetch device details. Original error: ${e.message}`);
+        this.log.warn(`Cannot fetch device details. Original error: ${(e as Error).message}`);
         return {};
       }
     })();
@@ -786,7 +798,7 @@ class AndroidUiautomator2Driver
     } else {
       await this.uiautomator2.installServerApk(this.opts.uiautomator2ServerInstallTimeout);
       try {
-        await this.adb!.addToDeviceIdleWhitelist(
+        await this.requireAdb().addToDeviceIdleWhitelist(
           SETTINGS_HELPER_ID,
           SERVER_PACKAGE_ID,
           SERVER_TEST_PACKAGE_ID,
@@ -829,21 +841,20 @@ class AndroidUiautomator2Driver
       await this.installOtherApks(otherApps);
     }
 
-    if (this.opts.app) {
-      if (
-        (this.opts.noReset && !(await this.adb!.isAppInstalled(this.opts.appPackage!))) ||
-        !this.opts.noReset
-      ) {
+    if (this.opts.app && this.opts.appPackage) {
+      const adb = this.requireAdb();
+      const appPackage = this.opts.appPackage;
+      if ((this.opts.noReset && !(await adb.isAppInstalled(appPackage))) || !this.opts.noReset) {
         if (
           !this.opts.noSign &&
-          !(await this.adb!.checkApkCert(this.opts.app, this.opts.appPackage!, {
+          !(await adb.checkApkCert(this.opts.app, appPackage, {
             requireDefaultCert: false,
           }))
         ) {
-          await signApp(this.adb!, this.opts.app);
+          await signApp(adb, this.opts.app);
         }
         if (!this.opts.skipUninstall) {
-          await this.adb!.uninstallApk(this.opts.appPackage!);
+          await adb.uninstallApk(appPackage);
         }
         await this.installAUT();
       } else {
@@ -865,28 +876,32 @@ class AndroidUiautomator2Driver
   }
 
   async ensureAppStarts() {
+    const adb = this.requireAdb();
+    const appPackage = this.opts.appPackage;
+    const appActivity = this.opts.appActivity;
+    if (!appPackage) {
+      throw this.log.errorWithException(
+        'appPackage capability is required to start the application',
+      );
+    }
     // make sure we have an activity and package to wait for
-    const appWaitPackage = this.opts.appWaitPackage || this.opts.appPackage;
-    const appWaitActivity = this.opts.appWaitActivity || this.opts.appActivity;
+    const appWaitPackage = this.opts.appWaitPackage || appPackage;
+    const appWaitActivity = this.opts.appWaitActivity || appActivity;
     this.log.info(
-      `Starting '${this.opts.appPackage}/${this.opts.appActivity}' ` +
-        `and waiting for '${appWaitPackage}/${appWaitActivity}'`,
+      `Starting '${appPackage}${appActivity ? '/' + appActivity : ''}` +
+        `and waiting for '${appWaitPackage}${appWaitActivity ? '/' + appWaitActivity : ''}'`,
     );
 
-    if (
-      this.opts.noReset &&
-      !this.opts.forceAppLaunch &&
-      (await this.adb!.processExists(this.opts.appPackage!))
-    ) {
+    if (this.opts.noReset && !this.opts.forceAppLaunch && (await adb.processExists(appPackage))) {
       this.log.info(
-        `'${this.opts.appPackage}' is already running and noReset is enabled. ` +
+        `'${appPackage}' is already running and noReset is enabled. ` +
           `Set forceAppLaunch capability to true if the app must be forcefully restarted on session startup.`,
       );
       return;
     }
-    await this.adb!.startApp({
-      pkg: this.opts.appPackage!,
-      activity: this.opts.appActivity,
+    await adb.startApp({
+      pkg: appPackage,
+      activity: appActivity,
       action: this.opts.intentAction || 'android.intent.action.MAIN',
       category: this.opts.intentCategory || 'android.intent.category.LAUNCHER',
       flags: this.opts.intentFlags || '0x10200000', // FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
@@ -980,7 +995,7 @@ class AndroidUiautomator2Driver
         try {
           await this.adb.setIME(this._originalIme);
         } catch (e) {
-          this.log.warn(`Cannot restore the original IME: ${e.message}`);
+          this.log.warn(`Cannot restore the original IME: ${(e as Error).message}`);
         }
       }
       try {
@@ -1023,19 +1038,19 @@ class AndroidUiautomator2Driver
     // settings to the uiauto2 server already
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  proxyActive(sessionId: string): boolean {
+  override proxyActive(sessionId: string): boolean {
+    void sessionId;
     // we always have an active proxy to the UiAutomator2 server
     return true;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  canProxy(sessionId: string): boolean {
+  override canProxy(sessionId: string): boolean {
+    void sessionId;
     // we can always proxy to the uiautomator2 server
     return true;
   }
 
-  getProxyAvoidList(): RouteMatcher[] {
+  override getProxyAvoidList(): RouteMatcher[] {
     // we are maintaining two sets of NO_PROXY lists, one for chromedriver(CHROME_NO_PROXY)
     // and one for uiautomator2(NO_PROXY), based on current context will return related NO_PROXY list
     if (util.hasValue(this.chromedriver)) {
@@ -1054,23 +1069,42 @@ class AndroidUiautomator2Driver
     return this.jwpProxyAvoid;
   }
 
-  async updateSettings(settings: Uiautomator2Settings) {
+  // @ts-expect-error narrower parameter type than the base class override allows
+  override async updateSettings(settings: Uiautomator2Settings) {
     await this.settings.update(settings);
-    await this.uiautomator2!.jwproxy.command('/appium/settings', 'POST', {settings});
+    await this.requireUiautomator2().jwproxy.command('/appium/settings', 'POST', {settings});
   }
 
-  async getSettings() {
+  override async getSettings(): Promise<StringRecord> {
     const driverSettings = this.settings.getSettings();
-    const serverSettings = (await this.uiautomator2!.jwproxy.command(
+    const serverSettings = (await this.requireUiautomator2().jwproxy.command(
       '/appium/settings',
       'GET',
     )) as Partial<Uiautomator2Settings>;
-    return {...driverSettings, ...serverSettings} as any;
+    return {...driverSettings, ...serverSettings};
   }
 
   // needed to make the typechecker happy
-  async getAppiumSessionCapabilities(): Promise<SessionCapabilities<Uiautomator2Constraints>> {
+  override async getAppiumSessionCapabilities(): Promise<
+    SessionCapabilities<Uiautomator2Constraints>
+  > {
     return (await super.getAppiumSessionCapabilities()) as SessionCapabilities<Uiautomator2Constraints>;
+  }
+
+  private requireAdb(): ADB {
+    const adb = this.adb;
+    if (!adb) {
+      throw this.log.errorWithException('ADB must be initialized before this operation');
+    }
+    return adb;
+  }
+
+  private requireUiautomator2(): UiAutomator2Server {
+    const server = this.uiautomator2;
+    if (!server) {
+      throw this.log.errorWithException('UiAutomator2 server is not initialized');
+    }
+    return server;
   }
 }
 
