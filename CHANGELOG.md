@@ -1,3 +1,9 @@
+## [8.2.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.1.2...v8.2.0) (2026-07-27)
+
+### Features
+
+* Isolate MJPEG helpers in the driver ([#1028](https://github.com/appium/appium-uiautomator2-driver/issues/1028)) ([f32c5b7](https://github.com/appium/appium-uiautomator2-driver/commit/f32c5b7c5a7bff1918ed19ccdf3db56a326c30cb))
+
 ## [8.1.2](https://github.com/appium/appium-uiautomator2-driver/compare/v8.1.1...v8.1.2) (2026-07-23)
 
 ### Miscellaneous Chores
