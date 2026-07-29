@@ -1,3 +1,9 @@
+## [8.2.2](https://github.com/appium/appium-uiautomator2-driver/compare/v8.2.1...v8.2.2) (2026-07-29)
+
+### Miscellaneous Chores
+
+* Drop chai ([#1031](https://github.com/appium/appium-uiautomator2-driver/issues/1031)) ([06494be](https://github.com/appium/appium-uiautomator2-driver/commit/06494be71f06070f05e75a77d23a1f0147116764))
+
 ## [8.2.1](https://github.com/appium/appium-uiautomator2-driver/compare/v8.2.0...v8.2.1) (2026-07-29)
 
 ### Miscellaneous Chores
