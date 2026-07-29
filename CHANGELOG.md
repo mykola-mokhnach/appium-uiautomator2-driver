@@ -1,3 +1,9 @@
+## [8.2.1](https://github.com/appium/appium-uiautomator2-driver/compare/v8.2.0...v8.2.1) (2026-07-29)
+
+### Miscellaneous Chores
+
+* Integrate oxc and release configs ([#1030](https://github.com/appium/appium-uiautomator2-driver/issues/1030)) ([31ef9f7](https://github.com/appium/appium-uiautomator2-driver/commit/31ef9f741d5be008fb607638fecc00a8ae69ded3))
+
 ## [8.2.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.1.2...v8.2.0) (2026-07-27)
 
 ### Features
