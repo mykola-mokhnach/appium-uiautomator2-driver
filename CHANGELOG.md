@@ -1,3 +1,13 @@
+## [8.3.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.2.2...v8.3.0) (2026-08-12)
+
+### Features
+
+* bump minimum appium-uiautomator2-server version and document collection attributes ([#1034](https://github.com/appium/appium-uiautomator2-driver/issues/1034)) ([ee6979a](https://github.com/appium/appium-uiautomator2-driver/commit/ee6979a840adbc3a287566a3c67550df4829a737))
+
+### Miscellaneous Chores
+
+* rename safe occurrences of JWProxy ([#1032](https://github.com/appium/appium-uiautomator2-driver/issues/1032)) ([0ea46a3](https://github.com/appium/appium-uiautomator2-driver/commit/0ea46a3b4f06992ba2417c988be5d4be5a97ad0e))
+
 ## [8.2.2](https://github.com/appium/appium-uiautomator2-driver/compare/v8.2.1...v8.2.2) (2026-07-29)
 
 ### Miscellaneous Chores
