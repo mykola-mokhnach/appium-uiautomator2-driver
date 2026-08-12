@@ -1,3 +1,9 @@
+## [8.4.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.3.0...v8.4.0) (2026-08-12)
+
+### Features
+
+* bump minimum appium-uiautomator2-server version and document mapTestTagToResourceId setting ([#1035](https://github.com/appium/appium-uiautomator2-driver/issues/1035)) ([d5f4d77](https://github.com/appium/appium-uiautomator2-driver/commit/d5f4d773df653a627ed3dbc9dc68f61545442520))
+
 ## [8.3.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.2.2...v8.3.0) (2026-08-12)
 
 ### Features
