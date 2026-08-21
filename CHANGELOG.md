@@ -1,3 +1,9 @@
+## [8.5.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.4.0...v8.5.0) (2026-08-21)
+
+### Features
+
+* Perform declaredOrientation api plumbing and update documentation ([#1036](https://github.com/appium/appium-uiautomator2-driver/issues/1036)) ([9a60ccd](https://github.com/appium/appium-uiautomator2-driver/commit/9a60ccda9e4a960aa19c70ddc45676b0a2dc847f))
+
 ## [8.4.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.3.0...v8.4.0) (2026-08-12)
 
 ### Features
