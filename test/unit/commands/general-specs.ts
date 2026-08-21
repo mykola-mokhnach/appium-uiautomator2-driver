@@ -38,6 +38,20 @@ describe('General', function () {
     });
   });
 
+  describe('mobile: getDeclaredOrientation', function () {
+    it('should proxy to the declared_orientation endpoint', async function () {
+      const commandStub = sinon.stub().resolves('SCREEN_ORIENTATION_PORTRAIT');
+      driver.uiautomator2 = {
+        jwproxy: {
+          command: commandStub,
+        },
+      } as any;
+      const result = await driver.execute('mobile: getDeclaredOrientation', {});
+      assert.equal(result, 'SCREEN_ORIENTATION_PORTRAIT');
+      sinon.assert.calledOnceWithExactly(commandStub, '/appium/device/declared_orientation', 'GET', {});
+    });
+  });
+
   describe('mobile: sensorSet', function () {
     // note: this test does not depend on whether or not isEmulator returns
     // true, because the "am I an emulator?" check happens in the sensorSet
