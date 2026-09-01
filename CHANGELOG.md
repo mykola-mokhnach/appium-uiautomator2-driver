@@ -1,3 +1,9 @@
+## [8.5.1](https://github.com/appium/appium-uiautomator2-driver/compare/v8.5.0...v8.5.1) (2026-09-01)
+
+### Miscellaneous Chores
+
+* bump support-related dependencies ([#1039](https://github.com/appium/appium-uiautomator2-driver/issues/1039)) ([e354d26](https://github.com/appium/appium-uiautomator2-driver/commit/e354d26e6c5288dd42058c1d8ac6dfa51c274216))
+
 ## [8.5.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.4.0...v8.5.0) (2026-08-21)
 
 ### Features
