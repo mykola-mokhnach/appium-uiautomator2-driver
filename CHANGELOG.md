@@ -1,3 +1,9 @@
+## [8.5.2](https://github.com/appium/appium-uiautomator2-driver/compare/v8.5.1...v8.5.2) (2026-09-01)
+
+### Bug Fixes
+
+* stop using deprecated appium/support imageUtil, rely on local sharp ([#1040](https://github.com/appium/appium-uiautomator2-driver/issues/1040)) ([56980b3](https://github.com/appium/appium-uiautomator2-driver/commit/56980b39635333e2d4b883d4457f8bbbbd9e905e))
+
 ## [8.5.1](https://github.com/appium/appium-uiautomator2-driver/compare/v8.5.0...v8.5.1) (2026-09-01)
 
 ### Miscellaneous Chores
