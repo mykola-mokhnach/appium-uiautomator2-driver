@@ -6,10 +6,15 @@ import type {Browser} from 'webdriverio';
 
 import {BROWSER_CAPS} from '../../desired.js';
 import {isCi} from '../../helpers/ci-e2e.js';
+import {getAssetPath} from '../../helpers/fixtures.js';
+import {startLocalPageServer, type LocalPageServer} from '../../helpers/local-page-server.js';
 import {initSession, deleteSession} from '../../helpers/session.js';
+
+const DRAG_AND_DROP_PAGE = getAssetPath('drag-and-drop.html');
 
 describe('w3c actions - webview', {skip: isCi()}, function () {
   let driver: Browser | undefined;
+  let pageServer: LocalPageServer | undefined;
 
   before(async function () {
     const adb = new ADB();
@@ -18,8 +23,12 @@ describe('w3c actions - webview', {skip: isCi()}, function () {
       return;
     }
     driver = await initSession(BROWSER_CAPS);
+    pageServer = await startLocalPageServer(adb, DRAG_AND_DROP_PAGE);
   });
   after(async function () {
+    if (pageServer) {
+      await pageServer.close();
+    }
     if (driver) {
       await deleteSession();
     }
@@ -40,7 +49,7 @@ describe('w3c actions - webview', {skip: isCi()}, function () {
       // ignore
     }
 
-    await driver!.url('https://the-internet.herokuapp.com/drag_and_drop');
+    await driver!.url(pageServer!.url);
 
     // confirm the driver actually proxied us into the Chrome web content and not native context;
     // a pure browserName session reports 'CHROMIUM', an app's embedded webview reports 'WEBVIEW_<pkg>'
