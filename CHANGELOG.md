@@ -1,3 +1,9 @@
+## [8.6.0](https://github.com/appium/appium-uiautomator2-driver/compare/v8.5.2...v8.6.0) (2026-09-04)
+
+### Features
+
+* add mobile: viewportElementRect to translate web element rects to native coordinates ([#1044](https://github.com/appium/appium-uiautomator2-driver/issues/1044)) ([0469f41](https://github.com/appium/appium-uiautomator2-driver/commit/0469f41ba37fd9dbc0a96bdeb80ec557cf5ffaa0))
+
 ## [8.5.2](https://github.com/appium/appium-uiautomator2-driver/compare/v8.5.1...v8.5.2) (2026-09-01)
 
 ### Bug Fixes
